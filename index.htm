@@ -19,90 +19,83 @@
         }
     </style>
     <script>
-        function bla() {
+        function radians_to_degrees(radians) {
+            var pi = Math.PI;
+            return radians * (180 / pi);
+        }
+
+        function newRope() {
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
             canvas.width = 256;
             canvas.height = 240;
-            const rope0 = new Image();
             const rope1 = new Image();
             const rope2 = new Image();
             const rope3 = new Image();
             const rope4 = new Image();
             const rope5 = new Image();
             const rope6 = new Image();
-            rope0.src = "rope0.png";
+            const rope7 = new Image();
+            const rope8 = new Image();
+            const rope9 = new Image();
+            const rope10 = new Image();
+            const rope11 = new Image();
+            const rope12 = new Image();
+            const rope13 = new Image();
+            const rope14 = new Image();
+            const rope15 = new Image();
             rope1.src = "rope1.png";
             rope2.src = "rope2.png";
             rope3.src = "rope3.png";
             rope4.src = "rope4.png";
             rope5.src = "rope5.png";
             rope6.src = "rope6.png";
+            rope7.src = "rope7.png";
+            rope8.src = "rope8.png";
+            rope9.src = "rope9.png";
+            rope10.src = "rope10.png";
+            rope11.src = "rope11.png";
+            rope12.src = "rope12.png";
+            rope13.src = "rope13.png";
+            rope14.src = "rope14.png";
+            rope15.src = "rope15.png";
+            ropes = [rope1, rope2, rope3, rope4, rope5, rope6, rope7, rope8, rope9, rope10, rope11, rope12, rope13, rope14, rope15];
 
-            const ropeh0 = new Image();
-            const ropeh1 = new Image();
-            const ropeh2 = new Image();
-            const ropeh3 = new Image();
-            const ropeh4 = new Image();
-            const ropeh5 = new Image();
-            const ropeh6 = new Image();
-            ropeh0.src = "ropeh1.png";
-            ropeh1.src = "ropeh2.png";
-            ropeh2.src = "ropeh3.png";
-            ropeh3.src = "ropeh4.png";
-            ropeh4.src = "ropeh5.png";
-            ropeh5.src = "ropeh6.png";
-            ropeh6.src = "ropeh7.png";
-            const ropes = [rope0, rope1, rope2, rope2, rope3, rope4, rope5, rope6];
-            const ropesh = [ropeh0, ropeh1, ropeh2, ropeh2, ropeh3, ropeh4, ropeh5, ropeh6];
-
-            const ropeWidth = [
-                0,//0 
-                3,//1 
-                4,//2 
-                6,//3 
-                8,//4 
-                8,//5 
-                8 //6
-                ];
-            const ropeHeight = [
-                8,//0 
-                8,//1 
-                8,//2 
-                8,//3 
-                5,//4 
-                4,//5 
-                0 //6
-                ];
-
-            function drawRope(angle, inverted, x, y, x1, y1) {
-                if (inverted) {
-                    //console.log(ropeWidth[angle], angle);
-                    let count = 0;
-                    if (ropeWidth[angle] == 0) {
-                        count = (y - y1) / ropeHeight[angle];
+            function drawRope(angle, x, y, x1, y1) {
+                let ropeWidth;
+                let ropeHeight;
+                const dx = x - x1;
+                const dy = y - y1;
+                if (angle >= 0 && angle <= 14) {
+                    if (angle == 0) {
+                        ropeWidth = 0;
+                        ropeHeight = 8;
                     }
-                    else if (ropeHeight[angle] == 0) {
-                        count = (x - x1) / ropeWidth[angle];
+                    if (angle == 14) {
+                        ropeWidth = 8;
+                        ropeHeight = 0;
                     }
                     else {
-                        const incrementX = (x - x1) / ropeWidth[angle];
-                        const incrementY = (y - y1) / ropeHeight[angle];
-                        count = Math.round(Math.max(incrementX, incrementY));
+                        ropeWidth = Math.min(angle, 8);
+                        ropeHeight = angle < 8 ? 8 : 15 - angle;
                     }
-                    console.log(angle, count);
+                    incrementX = ropeWidth > 0 ? dx / ropeWidth : 0;
+                    incrementY = ropeHeight > 0 ? dy / ropeHeight : 0;
+                    count = Math.max(incrementX, incrementY);
+                    const ddx = dx / count;
+                    const ddy = dy / count;
+                    count = Math.ceil(count);
+                    console.log(count, angle, ropeWidth, ropeHeight, x - x1);
+
                     while (count > 0) {
-                        context.drawImage(ropesh[angle], x, y);
-                        y -= ropeHeight[angle];
-                        x -= ropeWidth[angle];
+                        context.drawImage(ropes[angle], x, y);
+                        x -= ddx;
+                        y -= ddy;
                         count--;
                     }
                 }
-                else {
-                    console.log('lol');
-                    context.drawImage(ropes[angle], x, y);
-                }
             }
+
 
             canvas.addEventListener('mousemove', e => {
                 context.clearRect(0, 0, 256, 240);
@@ -114,35 +107,30 @@
                 var y2 = e.clientY;
 
                 const inverted = x2 > x1;
-                var slope = inverted ? (x2 - x1) * 256 / (y2 - y1) : (x1 - x2) * 256 / (y2 - y1);
-                if (slope < 256 * Math.tan(1 / 48 * Math.PI * 2.0))
-                    drawRope(0, inverted, x2, y2, x1, y1);
-                else if (slope < 256 * Math.tan(3 / 48 * Math.PI * 2.0))
-                    drawRope(1, inverted, x2, y2, x1, y1);
-                else if (slope < 256 * Math.tan(5 / 48 * Math.PI * 2.0))
-                    drawRope(2, inverted, x2, y2, x1, y1);
-                else if (slope < 256 * Math.tan(7 / 48 * Math.PI * 2.0))
-                    drawRope(3, inverted, x2, y2, x1, y1);
-                else if (slope < 256 * Math.tan(9 / 48 * Math.PI * 2.0))
-                    drawRope(4, inverted, x2, y2, x1, y1);
-                else if (slope < 256 * Math.tan(11 / 48 * Math.PI * 2.0))
-                    drawRope(5, inverted, x2, y2, x1, y1);
-                else
-                    drawRope(6, inverted, x2, y2, x1, y1);
+                const xDiff1 = (x2 - x1);
+                const xDiff2 = (x1 - x2);
+                const yDiff = (y2 - y1);
+                const degrees = radians_to_degrees(Math.atan2(yDiff, xDiff1));
 
-
+                var slope = (x2 - x1) * 256 / (y2 - y1);
+                for (i = 0; i <= 14; i++) {
+                    if (slope < 256 * Math.tan(i / 56 * Math.PI * 2)) {
+                        drawRope(i, x2, y2, x1, y1);
+                        break;
+                    }
+                }
 
                 context.beginPath();
                 context.arc(canvas.width / 2, canvas.height / 2, 8, 0, 2 * Math.PI);
+                context.fillStyle = 'blue';
+                context.fill();
                 context.stroke();
-
-
             });
         }
     </script>
 </head>
 
-<body onload=bla();>
+<body onload=newRope();>
     <canvas id="canvas">
 
     </canvas>
