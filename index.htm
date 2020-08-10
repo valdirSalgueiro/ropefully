@@ -106,12 +106,6 @@
                 var x2 = e.clientX;
                 var y2 = e.clientY;
 
-                const inverted = x2 > x1;
-                const xDiff1 = (x2 - x1);
-                const xDiff2 = (x1 - x2);
-                const yDiff = (y2 - y1);
-                const degrees = radians_to_degrees(Math.atan2(yDiff, xDiff1));
-
                 var slope = (x2 - x1) * 256 / (y2 - y1);
                 for (i = 0; i <= 14; i++) {
                     if (slope < 256 * Math.tan(i / 56 * Math.PI * 2)) {
