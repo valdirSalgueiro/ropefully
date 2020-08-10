@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: ivory;
+        }
+
+        #canvas {
+            position: absolute;
+            border: 1px solid red;
+        }
+    </style>
+    <script>
+        function bla() {
+            const canvas = document.getElementById('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 256;
+            canvas.height = 240;
+            const rope0 = new Image();
+            const rope1 = new Image();
+            const rope2 = new Image();
+            const rope3 = new Image();
+            const rope4 = new Image();
+            const rope5 = new Image();
+            const rope6 = new Image();
+            rope0.src = "rope0.png";
+            rope1.src = "rope1.png";
+            rope2.src = "rope2.png";
+            rope3.src = "rope3.png";
+            rope4.src = "rope4.png";
+            rope5.src = "rope5.png";
+            rope6.src = "rope6.png";
+
+            const ropeh0 = new Image();
+            const ropeh1 = new Image();
+            const ropeh2 = new Image();
+            const ropeh3 = new Image();
+            const ropeh4 = new Image();
+            const ropeh5 = new Image();
+            const ropeh6 = new Image();
+            ropeh0.src = "ropeh1.png";
+            ropeh1.src = "ropeh2.png";
+            ropeh2.src = "ropeh3.png";
+            ropeh3.src = "ropeh4.png";
+            ropeh4.src = "ropeh5.png";
+            ropeh5.src = "ropeh6.png";
+            ropeh6.src = "ropeh7.png";
+            const ropes = [rope0, rope1, rope2, rope2, rope3, rope4, rope5, rope6];
+            const ropesh = [ropeh0, ropeh1, ropeh2, ropeh2, ropeh3, ropeh4, ropeh5, ropeh6];
+
+            const ropeWidth = [
+                0,//0 
+                3,//1 
+                4,//2 
+                6,//3 
+                8,//4 
+                8,//5 
+                8 //6
+                ];
+            const ropeHeight = [
+                8,//0 
+                8,//1 
+                8,//2 
+                8,//3 
+                5,//4 
+                4,//5 
+                0 //6
+                ];
+
+            function drawRope(angle, inverted, x, y, x1, y1) {
+                if (inverted) {
+                    //console.log(ropeWidth[angle], angle);
+                    let count = 0;
+                    if (ropeWidth[angle] == 0) {
+                        count = (y - y1) / ropeHeight[angle];
+                    }
+                    else if (ropeHeight[angle] == 0) {
+                        count = (x - x1) / ropeWidth[angle];
+                    }
+                    else {
+                        const incrementX = (x - x1) / ropeWidth[angle];
+                        const incrementY = (y - y1) / ropeHeight[angle];
+                        count = Math.round(Math.max(incrementX, incrementY));
+                    }
+                    console.log(angle, count);
+                    while (count > 0) {
+                        context.drawImage(ropesh[angle], x, y);
+                        y -= ropeHeight[angle];
+                        x -= ropeWidth[angle];
+                        count--;
+                    }
+                }
+                else {
+                    console.log('lol');
+                    context.drawImage(ropes[angle], x, y);
+                }
+            }
+
+            canvas.addEventListener('mousemove', e => {
+                context.clearRect(0, 0, 256, 240);
+                x = e.offsetX;
+                y = e.offsetY;
+                var x1 = canvas.width / 2;
+                var y1 = canvas.height / 2;
+                var x2 = e.clientX;
+                var y2 = e.clientY;
+
+                const inverted = x2 > x1;
+                var slope = inverted ? (x2 - x1) * 256 / (y2 - y1) : (x1 - x2) * 256 / (y2 - y1);
+                if (slope < 256 * Math.tan(1 / 48 * Math.PI * 2.0))
+                    drawRope(0, inverted, x2, y2, x1, y1);
+                else if (slope < 256 * Math.tan(3 / 48 * Math.PI * 2.0))
+                    drawRope(1, inverted, x2, y2, x1, y1);
+                else if (slope < 256 * Math.tan(5 / 48 * Math.PI * 2.0))
+                    drawRope(2, inverted, x2, y2, x1, y1);
+                else if (slope < 256 * Math.tan(7 / 48 * Math.PI * 2.0))
+                    drawRope(3, inverted, x2, y2, x1, y1);
+                else if (slope < 256 * Math.tan(9 / 48 * Math.PI * 2.0))
+                    drawRope(4, inverted, x2, y2, x1, y1);
+                else if (slope < 256 * Math.tan(11 / 48 * Math.PI * 2.0))
+                    drawRope(5, inverted, x2, y2, x1, y1);
+                else
+                    drawRope(6, inverted, x2, y2, x1, y1);
+
+
+
+                context.beginPath();
+                context.arc(canvas.width / 2, canvas.height / 2, 8, 0, 2 * Math.PI);
+                context.stroke();
+
+
+            });
+        }
+    </script>
+</head>
+
+<body onload=bla();>
+    <canvas id="canvas">
+
+    </canvas>
+</body>
+
+</html>
